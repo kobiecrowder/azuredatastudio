@@ -6,8 +6,9 @@
 import * as vscode from 'vscode';
 import * as os from 'os';
 import * as constants from './constants';
-import { promises as fs } from 'fs';
 import * as path from 'path';
+import * as glob from 'fast-glob';
+import { promises as fs } from 'fs';
 
 /**
  * Consolidates on the error message string
@@ -213,4 +214,13 @@ export function isValidSqlCmdVariableName(name: string | undefined): boolean {
 	// TODO: tsql parsing to check if it's a reserved keyword or invalid tsql https://github.com/microsoft/azuredatastudio/issues/12204
 
 	return true;
+}
+
+export async function getSqlProjectFilesInFolder(folderPath: string): Promise<string[]> {
+	// path needs to use forward slashes for glob to work
+	const escapedPath = glob.escapePath(folderPath.replace(/\\/g, '/'));
+	const sqlprojFilter = path.posix.join(escapedPath, '**', '*.sqlproj');
+	const results = await glob(sqlprojFilter);
+
+	return results;
 }
