@@ -428,6 +428,8 @@ export class AddDatabaseReferenceDialog {
 		switch (this.currentReferenceType) {
 			case ReferenceType.project: {
 				// TODO: add when projects support is added
+				this.databaseNameTextbox!.value = <string>this.projectDropdown?.value;
+				this.databaseVariableTextbox!.value = `$(${this.projectDropdown?.value})`;
 				break;
 			}
 			case ReferenceType.systemDb: {
